@@ -49,22 +49,63 @@
       );
     }
     function KphToMph(){
-      return(
-        <h3>kph to mph</h3>
+      const [amount, setAmount] = React.useState();
+      const [inverted, setInverted] = React.useState(false);
+      const onChange = (event) => {
+        setAmount(event.target.value);
+      }
+      const reset = () => setAmount(0);
+      const onFlip = () => {
+        reset();
+        setInverted((current) => !current);
+      }
+      return (
+        <div>
+          <div>
+            <label htmlFor="kph">kph</label>
+            <input 
+              value = {inverted ? amount * 1.609344 : amount}
+              id="kph"
+              type="number"
+              placeholder="kph" 
+              onChange={onChange}
+              disabled = {inverted}
+            />
+          </div>
+          <div>
+            <h4>you want to convert {amount}</h4>
+            <label htmlFor="mph">mph</label>
+            <input 
+              value={inverted ?  amount : Math.round(amount / 1.609344)}
+              id="mph" 
+              type="number" 
+              placeholder="mph" 
+              onChange={onChange}
+              disabled = {!inverted}
+            />
+          </div>
+          <button onClick={reset}>Reset</button>
+          <button onClick={onFlip}>{inverted ? "kph to mph" : "mph to kph"}</button>
+        </div>
       );
     }
     function App(){
-      const [index, setIndex] = React.useState(0)
+      const [index, setIndex] = React.useState("0")
       const onSelect = (event) => {
-        console.log(event.target.value);
+        setIndex(event.target.value);
       }
       return (
         <div>
           <h1>super converter</h1>
-          <select onChange={onSelect}>
+          <select value={index} onChange={onSelect}>
+            <option value="xx">select your units</option>
             <option value="0">min & hr</option>
             <option value="1">kph & mph</option>
           </select>
+          <hr />
+          {index === "xx" ? "please select your units" : null}
+          {index === "0" ? <MinutesToHours /> : null}
+          {index === "1" ? <KphToMph /> : null}
         </div>
       );
     }
